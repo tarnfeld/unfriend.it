@@ -5,6 +5,7 @@
 		<style type="text/css">
 			body {
 				font-family: "Lucida Grande", Tahoma, Helvetica, Arial, sans-serif;
+				display: none;
 			}
 			#wrapper {
 				width: 320px;
@@ -36,6 +37,14 @@
 				color: #476fb3;
 			}
 		</style>
+		<script type="text/javascript" src="js/jquery.js"></script>
+		<script type="text/javascript">
+		$(function() {
+			setTimeout(function() {
+				$("body").fadeIn(500);
+			}, 250);
+		});
+		</script>
 	</head>
 	<body>
 		<div id="wrapper">
