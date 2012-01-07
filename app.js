@@ -22,6 +22,8 @@ app.configure(function(){
   app.use(express.static(__dirname + '/public'));
 });
 
+// Environment based configuration
+
 app.configure('development', function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
 });
@@ -34,5 +36,6 @@ app.configure('production', function(){
 
 app.get('/', routes.index);
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+// Listen on port 8080
+
+app.listen(8080);
