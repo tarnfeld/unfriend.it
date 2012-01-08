@@ -13,8 +13,6 @@ var express = require('express')
     , conf = require('./config')
     , socketio = require('socket.io');
 
-console.log(conf);
-
 var app = module.exports = express.createServer();
 var resque = require('coffee-resque').connect(conf.redis);
 
@@ -23,9 +21,9 @@ var db_users = redis.createClient(conf.redis.port, conf.redis.host)
   , db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
 if (conf.redis.pass) {
-  db_users.auth(conf.redis.pass);
-  db_friends.auth(conf.redis.pass);
-  db_notifications.auth(conf.redis.pass);
+  db_users.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
+  db_friends.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
+  db_notifications.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
 }
 
 db_users.select(0);
