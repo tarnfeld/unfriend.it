@@ -13,16 +13,16 @@ var graph = require('fbgraph')
 	, db_friends = redis.createClient(conf.redis.port, conf.redis.host)
 	, db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
-// Select the different databases
-db_users.select(0);
-db_friends.select(1);
-db_notifications.select(2);
-
 if (conf.redis.pass) {
   db_users.auth(conf.redis.pass);
   db_friends.auth(conf.redis.pass);
   db_notifications.auth(conf.redis.pass);
 }
+
+// Select the different databases
+db_users.select(0);
+db_friends.select(1);
+db_notifications.select(2);
 
 // Connect to resque
 var queue = resque.connect(conf.redis);

@@ -22,15 +22,15 @@ var db_users = redis.createClient(conf.redis.port, conf.redis.host)
   , db_friends = redis.createClient(conf.redis.port, conf.redis.host)
   , db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
-db_users.select(0);
-db_friends.select(1);
-db_notifications.select(2);
-
 if (conf.redis.pass) {
   db_users.auth(conf.redis.pass);
   db_friends.auth(conf.redis.pass);
   db_notifications.auth(conf.redis.pass);
 }
+
+db_users.select(0);
+db_friends.select(1);
+db_notifications.select(2);
 
 /**
  * Webapp
