@@ -13,10 +13,11 @@ var graph = require('fbgraph')
 	, db_friends = redis.createClient(conf.redis.port, conf.redis.host)
 	, db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
+// Authenticate
 if (conf.redis.pass) {
-  db_users.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
-  db_friends.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
-  db_notifications.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
+  db_users.auth(conf.redis.pass);
+  db_friends.auth(conf.redis.pass);
+  db_notifications.auth(conf.redis.pass);
 }
 
 // Select the different databases
