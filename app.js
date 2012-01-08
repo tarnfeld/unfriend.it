@@ -11,7 +11,9 @@ var express = require('express')
     , resque = require('coffee-resque')
     , crypto = require('crypto')
     , conf = require('./config')
-    , socketio = require('socket.io')
+    , socketio = require('socket.io');
+
+console.log(conf);
 
 var app = module.exports = express.createServer();
 var resque = require('coffee-resque').connect(conf.redis);
