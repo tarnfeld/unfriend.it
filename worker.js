@@ -18,6 +18,12 @@ db_users.select(0);
 db_friends.select(1);
 db_notifications.select(2);
 
+if (conf.redis.pass) {
+  db_users.auth(conf.redis.pass);
+  db_friends.auth(conf.redis.pass);
+  db_notifications.auth(conf.redis.pass);
+}
+
 // Connect to resque
 var queue = resque.connect(conf.redis);
 
