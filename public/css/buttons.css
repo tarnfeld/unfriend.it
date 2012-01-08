@@ -1,0 +1,64 @@
+/**
+ * Button CSS for unfriend.it
+ * (c) unfriendit
+ * Author: Tom Arnfeld <tarnfeld@me.com>
+ */
+
+/**
+ * Buttons
+ */
+button,
+.button {
+	outline: none;
+	border: none !important;
+	margin: 0;
+	padding: 0;
+	vertical-align: middle;
+	cursor: pointer;
+	line-height: 1;
+	text-decoration: none !important;
+	background: transparent;
+	overflow: visible;
+	font-weight: bold;
+	white-space: nowrap;
+	display: inline-block;
+}
+button:hover,
+.button:hover {
+	opacity: 0.9;
+}
+button:active,
+.button:active {
+	position: relative;
+	top: 1px;
+	opacity: 1 !important;
+}
+  button span,
+  .button span {
+  	display: inline-block;
+  	border: 0;
+    border-top: 1px solid #103976;
+    border-bottom: 1px solid #b6c3d6;
+    background-color: #7592c3;
+    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(117, 146, 195)),to(rgb(76, 113, 175)));
+    background-image: -webkit-linear-gradient(top, rgb(117, 146, 195), rgb(76, 113, 175));
+    background-image: linear-gradient(top, rgb(117, 146, 195), rgb(76, 113, 175));
+    -webkit-border-radius: 1px;
+    -moz-border-radius: 1px;    
+    border-radius: 1px;
+  }
+    button span span,
+    .button span span {
+      border: 1px solid #103976;
+      border-top-color: #94b5e6;
+      padding: 3px 8px 5px 8px;
+      color: #FFF;
+      text-shadow: 0 1px #283e85;
+    }
+
+.button-fb span span,
+.button-fb span span:active,
+.button-fb span span:hover {
+  background: url(/images/fb-button.gif) 0 0 no-repeat;
+  padding-left: 29px;
+}

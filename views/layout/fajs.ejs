@@ -1,0 +1,29 @@
+<div id="fb-root"></div>
+<script type="text/javascript">
+
+var App;
+window.fbAsyncInit = function() {
+	FB.init({
+		appId: '187633658000500',
+		status: true,
+		cookie: true,
+		oauth: true,
+		xfbml: true
+	});
+	
+	FB.Event.subscribe('auth.login', function(response) {
+		window.location.reload();
+	});
+	
+	App = new Unfriend();
+	App.Init();
+};
+
+// Load the Facebook Async javascript
+(function() {
+	var e = document.createElement('script');
+	e.async = true;
+	e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+	document.getElementById('fb-root').appendChild(e);
+}());
+</script>

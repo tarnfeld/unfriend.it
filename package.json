@@ -5,5 +5,10 @@
   , "dependencies": {
       "express": "2.5.2"
     , "ejs": ">= 0.6.1"
+    , "connect-redis": "1.2.0"
+    , "redis": "0.7.1"
+    , "coffee-resque": "0.1.4"
+    , "underscore": "1.2.4"
+    , "fbgraph": "0.2.1"
   }
 }

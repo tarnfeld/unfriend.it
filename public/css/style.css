@@ -1,0 +1,63 @@
+/**
+ * Main CSS for unfriend.it
+ * (c) unfriendit
+ * Author: Tom Arnfeld <tarnfeld@me.com>
+ */
+
+/**
+ * Global / Layout
+ */
+body {
+  background: #fff;
+  font-family: "Lucida Grande", "Helveitca", Arial, sans-serif;
+  font-size: 11px;
+  color: #000;
+}
+#wrapper {
+  width: 864px;
+  padding: 48px;
+  margin: 0 auto;
+}
+p {
+  margin: 10px 0;
+}
+a {
+  font-weight: bold;
+  -webkit-transition: color 200ms ease-in-out;
+}
+a:active {
+  position: relative;
+  top: 1px;
+}
+a:hover {
+	color: #476fb3;
+}
+
+/**
+ * Columns
+ */
+.cols { }
+  .cols .subcol {
+    float: left;
+    width: 191px;
+    margin: 0 -1px 0 0;
+    padding: 0 1px 0 0;
+  }
+  .cols .maincol {
+    float: left;
+    width: 624px;
+    padding: 0 0 0 48px;
+  }
+
+/**
+ * Subcol
+ */
+.subcol { }
+  .subcol h1 { }
+    .subcol h1 a {
+      display: block;
+      width: 191px;
+      height: 42px;
+      text-indent: -100000px;
+      background: url(/images/logo.gif) 0 0 no-repeat;
+    }

@@ -1,2 +1,30 @@
-Hey, here's the body..
-<%- body %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>unfriend.it</title>
+		
+		<link rel="stylesheet" href="/css/reset.css" />
+		<link rel="stylesheet" href="/css/style.css" />
+		<link rel="stylesheet" href="/css/buttons.css" />
+		
+		<script type="text/javascript" src="/js/jquery.js"></script>
+		<script type="text/javascript" src="/js/unfriend.js"></script>
+		<script type="text/javascript" src="/js/global.js"></script>
+	</head>
+	<body>
+	
+		<div id="wrapper">
+			<div class="cols cf">
+				<div class="subcol">
+					<h1><a href="/">unfriend.it</a></h1>
+					<p>Logged in as <strong>Leonard ABC</strong></p>
+				</div>
+				<div class="maincol">
+					<%- body %>
+				</div>
+			</div>
+		</div>
+		
+		<%- partial('layout/analytics') %>
+	</body>
+</html>
