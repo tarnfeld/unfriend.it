@@ -4,7 +4,7 @@
  */
 
 var express = require('express')
-    , redis_session = require('connect-redis')(express)
+    // , redis_session = require('connect-redis')(express)
     , redis = require('redis')
     , ejs = require('ejs')
     , graph = require('fbgraph')
@@ -43,7 +43,7 @@ app.configure(function(){
   app.set('view engine', 'ejs');
 
   app.use(express.cookieParser());
-  app.use(express.session({ store: new redis_session, secret: 'keyboard cat' }));
+  // app.use(express.session({ store: session, secret: 'keyboard cat' }));
   
   app.helpers({
     _: require('underscore')
