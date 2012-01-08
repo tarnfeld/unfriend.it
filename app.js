@@ -20,10 +20,10 @@ var db_users = redis.createClient(conf.redis.port, conf.redis.host)
   , db_friends = redis.createClient(conf.redis.port, conf.redis.host)
   , db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
-if (conf.redis.pass) {
-  db_users.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
-  db_friends.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
-  db_notifications.auth(conf.redis.pass, function(err, reply) { console.log(err, reply); });
+if (conf.redis.password) {
+  db_users.auth(conf.redis.password);
+  db_friends.auth(conf.redis.password);
+  db_notifications.auth(conf.redis.password);
 }
 
 db_users.select(0);
