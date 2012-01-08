@@ -4,7 +4,7 @@
  */
 
 var express = require('express')
-    // , redis_session = require('connect-redis')(express)
+    , connect_redis = require('connect-redis')(express)
     , redis = require('redis')
     , ejs = require('ejs')
     , graph = require('fbgraph')
@@ -19,16 +19,19 @@ var resque = require('coffee-resque').connect(conf.redis);
 var db_users = redis.createClient(conf.redis.port, conf.redis.host)
   , db_friends = redis.createClient(conf.redis.port, conf.redis.host)
   , db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
+  , db_session = redis.createClient(conf.redis.port, conf.redis.host)
 
 if (conf.redis.password) {
   db_users.auth(conf.redis.password);
   db_friends.auth(conf.redis.password);
   db_notifications.auth(conf.redis.password);
+  db_session.auth(conf.redis.password);
 }
 
 db_users.select(0);
 db_friends.select(1);
 db_notifications.select(2);
+db_session.select(3);
 
 /**
  * Webapp
@@ -41,7 +44,11 @@ app.configure(function(){
   app.set('view engine', 'ejs');
 
   app.use(express.cookieParser());
-  // app.use(express.session({ store: session, secret: 'keyboard cat' }));
+
+  var session = new connect_redis({
+    client: db_session
+  });
+  app.use(express.session({ store: session, secret: 'keyboard cat' }));
   
   app.helpers({
     _: require('underscore')
