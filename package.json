@@ -10,5 +10,6 @@
     , "coffee-resque": "0.1.4"
     , "underscore": "1.2.4"
     , "fbgraph": "0.2.1"
+    , "socket.io": "0.8.7"
   }
 }

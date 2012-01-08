@@ -1,1 +1,5 @@
-Length of cached friends: <%= length %>
+<% if (friends.length > 0) { %>
+<p>We have <%=friends.length%> friends!</p>
+<% } else { %>
+<p>Loading friends...</p>
+<% } %>

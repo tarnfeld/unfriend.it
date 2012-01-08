@@ -4,38 +4,66 @@
  */
 
 var graph = require('fbgraph')
-		, resque = require('coffee-resque')
-		, crypto = require('crypto')
+	, resque = require('coffee-resque')
+	, crypto = require('crypto')
+	, _ = require('underscore')
+	, redis = require('redis')
+	, conf = require('./config')
+	, db_users = redis.createClient(conf.redis.port, conf.redis.host)
+	, db_friends = redis.createClient(conf.redis.port, conf.redis.host)
+	, db_notifications = redis.createClient(conf.redis.port, conf.redis.host)
 
-var redis = require('redis').createClient();
+// Select the different databases
+db_users.select(0);
+db_friends.select(1);
+db_notifications.select(2);
 
 // Connect to resque
-var queue = resque.connect({
-	host: '127.0.0.1'
-	, port: '6379'
-});
+var queue = resque.connect(conf.redis);
 
 // Jobs
 var jobs = {
-	generate_friends: function(access_token, callback) {
-		graph.setAccessToken(access_token);
-		
-		graph.get('me/friends', function(err, res) {
-			if (res.data) {
-				var friends = res.data;
-				var friends_list = 'friends_cache_' + crypto.createHash('md5').update(access_token).digest("hex");
-				
-				redis.del(friends_list);
-				for (var k in friends) {
-					redis.rpush(friends_list, JSON.stringify(friends[k]));
-				}
+	generate_friends: function(user_hash, callback) {
+
+		db_users.get(user_hash, function(err, reply) {
+			if (reply) {
+				var user = JSON.parse(reply)
+				, friends = {}
+				, friend;
+
+				// Grab the friends from the facebook graph api
+				graph.setAccessToken(user.access_token);
+				graph.get('me/friends', function(err, res) {
+					if (res.data) {
+						for (var i = res.data.length - 1; i >= 0; i--) {
+							friend = res.data[i];
+							friends[friend.id] = friend;
+						};
+					}
+
+					// Save the friends to redis
+					db_friends.set(user.hash, JSON.stringify(_.values(friends)));
+					
+					// Delete the generating flag
+					db_friends.del("generating:" + user.hash);
+					
+					// Send the notification into redis
+					var event = {
+						channel: "generated_friends",
+						identifier: user.hash,
+						payload: _.values(friends)
+					};
+					db_notifications.publish("notifications:socketio", JSON.stringify(event));
+
+					// Finish up
+					callback();
+				});
+			} else {
+				// Throw an error
+				console.log("Couldn't find user with hash " + user_hash);
+				callback();
 			}
 		});
-		
-		var key = "generating_" + access_token;
-		redis.del(key);
-		
-		callback();
 	}
 };
 
@@ -45,10 +73,6 @@ var worker = queue.worker('fb', jobs);
 // Events
 worker.on('job', function(worker, queue, job) {
 	console.log("Processing job: " + job.class);
-});
-
-worker.on('poll', function(worker, queue) {
-	console.log("Polling for job on queue: " + queue);
 });
 
 // Start the worker
