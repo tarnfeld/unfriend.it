@@ -168,10 +168,6 @@ app.get('/auth/facebook', function(req, res) {
 });
 
 app.get('/friends', auth_require, function(req, res) {
-  
-  // Temporary
-  resque.enqueue('fb', 'generate_friends', [req.user.hash]);
-
   db_friends.get(req.user.hash, function(err, reply) {
     if (reply) {
       var friends = JSON.parse(reply);
