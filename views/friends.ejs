@@ -1,5 +1,15 @@
 <% if (friends.length > 0) { %>
-<p>We have <%=friends.length%> friends!</p>
+<div class="friends cf">
+	<% for (var i = 0; i < friends.length; i++) { %>
+		<div class="friend" data-fbid="<%=friends[i].id%>">
+			<img src="https://graph.facebook.com/<%=friends[i].id%>/picture" width="48" height="48" />
+			<p><strong><%=friends[i].name%></strong></p>
+			<span class="check"></span>
+		</div>
+	<% } %>
+</div>
 <% } else { %>
-<p>Loading friends...</p>
+<div class="loading">
+	<p><strong>Loading your friends now...</strong></p>
+</div>
 <% } %>

@@ -22,15 +22,17 @@ p {
   margin: 10px 0;
 }
 a {
+  text-decoration: none;
+  color: #000;
   font-weight: bold;
   -webkit-transition: color 200ms ease-in-out;
+}
+a:hover {
+  color: #476fb3;
 }
 a:active {
   position: relative;
   top: 1px;
-}
-a:hover {
-	color: #476fb3;
 }
 
 /**
@@ -61,3 +63,58 @@ a:hover {
       text-indent: -100000px;
       background: url(/images/logo.gif) 0 0 no-repeat;
     }
+
+/**
+ * Friends
+ */
+.friends {
+  margin: 0 -48px 0 0;
+}
+  .friends .friend {
+    float: left;
+    width: 256px;
+    padding: 15px 16px;
+    border-top: 1px solid #e5e5e5;
+    margin-right: 48px;
+    position: relative;
+    cursor: pointer;
+  }
+  .friends .friend.checked {
+    background: #fff2f2;
+  }
+    .friends .friend img {
+      float: left;
+      margin: 0 16px 0 0;
+    }
+    .friends .friend p {
+      float: left;
+      font-size: 13px;
+      padding-top: 6px;
+    }
+    .friends .friend.checked p {
+      color: #a00000;
+    }
+    .friends .friend .check {
+      display: block;
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      right: 15px;
+      top: 50%;
+      margin: -9px 0 0 0;
+      background: url(/images/checks.gif) 0 0 no-repeat;
+    }
+    .friends .friend.checked .check {
+      background-position: 0 100%;
+    }
+
+/**
+ * Loading
+ */
+.loading {
+  background: url(/images/loading.gif) 50% 100% no-repeat;
+}
+  .loading p {
+    text-align: center;
+    padding: 10px 0 30px 0;
+  }

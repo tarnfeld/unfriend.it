@@ -56,7 +56,7 @@ var jobs = {
 					var event = {
 						channel: "generated_friends",
 						identifier: user.hash,
-						payload: _.values(friends)
+						payload: "updated_friends"
 					};
 					db_notifications.publish("notifications:socketio", JSON.stringify(event));
 

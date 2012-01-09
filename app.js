@@ -135,26 +135,35 @@ app.get('/auth/facebook', function(req, res) {
   }, function (err, facebookRes) {
     if (facebookRes.access_token) {
       var hashed_token = crypto.createHash('md5').update(facebookRes.access_token).digest("hex");
-      var user = {
-        hash: hashed_token,
-        access_token: facebookRes.access_token,
-        email: null
-      };
 
-      db_users.set(hashed_token, JSON.stringify(user));
-      req.session.user = user;
+      graph.get('me', function(err, data) {
+        if (data) {
+          var user = {
+            hash: hashed_token,
+            access_token: facebookRes.access_token,
+            email: data.email,
+            name: data.name,
+            link: data.link
+          };
 
-      db_friends.get("generating:" + user.hash, function(err, reply) {
-        if (!reply) {
-          resque.enqueue('fb', 'generate_friends', [user.hash]);
-          db_friends.set("generating:" + user.hash, true);
+          db_users.set(hashed_token, JSON.stringify(user));
+          req.session.user = user;
+
+          db_friends.get("generating:" + user.hash, function(err, reply) {
+            if (!reply) {
+              resque.enqueue('fb', 'generate_friends', [user.hash]);
+              db_friends.set("generating:" + user.hash, true);
+            }
+          });
+
+          res.redirect('/friends');
+          return;
+        } else {
+          res.redirect('/');
+          return;
         }
       });
-
-      res.redirect('/friends');
-      return;
     }
-    res.redirect('/');
   });
 });
 
@@ -168,23 +177,43 @@ app.get('/friends', auth_require, function(req, res) {
       var friends = JSON.parse(reply);
       if (friends) {
         res.render('friends', {
-          friends: friends
+          friends: friends,
+          user: req.user
         });
       } else {
         res.render('friends', {
-          friends: []
+          friends: [],
+          user: req.user
         });
       }
     } else {
       res.render('friends', {
-        friends: []
+        friends: [],
+        user: req.user
       });
     }
   });
 });
 
-// Listen on port 8080
+app.get('/friends_list', auth_require, function(req, res) {
+  db_friends.get(req.user.hash, function(err, reply) {
+    if (reply) {
+      var friends = JSON.parse(reply);
+      if (friends) {
+        res.render('friends', {
+          friends: friends,
+          layout: false
+        });
+      } else {
+        res.send("");
+      }
+    } else {
+      res.send("");
+    }
+  });
+});
 
+// Listen on port 8080
 app.listen(8080);
 
 /**
@@ -197,6 +226,10 @@ var io = socketio.listen(app);
  */
 db_notifications.on("message", function (channel, message) {
   var message = JSON.parse(message);
-  io.sockets.emit(message.channel, JSON.stringify(message.payload));
+  var n = {
+    identifier: message.identifier,
+    payload: message.payload
+  };
+  io.sockets.emit(message.channel, JSON.stringify(n));
 });
 db_notifications.subscribe('notifications:socketio');
