@@ -39,10 +39,8 @@ button:active,
   	border: 0;
     border-top: 1px solid #103976;
     border-bottom: 1px solid #b6c3d6;
-    background-color: #7592c3;
-    background-image: -webkit-gradient(linear, left top, left bottom, from(rgb(117, 146, 195)),to(rgb(76, 113, 175)));
-    background-image: -webkit-linear-gradient(top, rgb(117, 146, 195), rgb(76, 113, 175));
-    background-image: linear-gradient(top, rgb(117, 146, 195), rgb(76, 113, 175));
+    background: url(/images/button.gif) 0 0 repeat-x #4772ae;
+    background-color: #4772ae;
     -webkit-border-radius: 1px;
     -moz-border-radius: 1px;    
     border-radius: 1px;
