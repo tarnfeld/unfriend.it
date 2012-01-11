@@ -20,6 +20,7 @@ body {
 }
 p {
   margin: 10px 0;
+  line-height: 1.5;
 }
 a {
   text-decoration: none;
@@ -62,6 +63,9 @@ a:active {
       height: 42px;
       text-indent: -100000px;
       background: url(/images/logo.gif) 0 0 no-repeat;
+    }
+    .subcol h1 a:hover {
+      top: 0;
     }
 
 /**
