@@ -48,17 +48,9 @@ var jobs = {
 
 					// Save the friends to redis
 					db_friends.set(user.hash, JSON.stringify(_.values(friends)));
-					
-					// Delete the generating flag
-					db_friends.del("generating:" + user.hash);
-					
-					// Send the notification into redis
-					var event = {
-						channel: "generated_friends",
-						identifier: user.hash,
-						payload: "updated_friends"
-					};
-					db_notifications.publish("notifications:socketio", JSON.stringify(event));
+
+					// Enqueue the friends sort
+					queue.enqueue('fb', 'sort_friends', [user.hash]);
 
 					// Finish up
 					callback();
@@ -66,6 +58,39 @@ var jobs = {
 			} else {
 				// Throw an error
 				console.log("Couldn't find user with hash " + user_hash);
+				callback();
+			}
+		});
+	},
+	sort_friends: function(user_hash, callback) {
+		var friends;
+
+		db_friends.get(user_hash, function(err, reply) {
+			if (reply) {
+
+				friends = JSON.parse(reply);
+				friends.sort(function(l, r) {
+					if (l.name < r.name) return -1;
+					if (l.name > r.name) return 1;
+					return 0;
+				});
+
+				db_friends.set(user_hash, JSON.stringify(_.values(friends)));
+
+				// Delete the generating flag
+				db_friends.del("generating:" + user_hash);
+				
+				// Send the notification into redis
+				var event = {
+					channel: "generated_friends",
+					identifier: user_hash,
+					payload: "updated_friends"
+				};
+				db_notifications.publish("notifications:socketio", JSON.stringify(event));
+
+				callback();	
+			} else {
+				console.log("Couldn't load friends from key: " + key);
 				callback();
 			}
 		});
