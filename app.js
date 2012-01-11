@@ -167,6 +167,11 @@ app.get('/auth/facebook', function(req, res) {
   });
 });
 
+app.get('/auth/logout', function(req, res) {
+  req.session.user = null;
+  res.redirect("/");
+});
+
 app.get('/friends', auth_require, function(req, res) {
   db_friends.get(req.user.hash, function(err, reply) {
     if (reply) {
