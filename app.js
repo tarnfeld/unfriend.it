@@ -151,6 +151,7 @@ app.get('/auth/facebook', function(req, res) {
 
           db_friends.get("generating:" + user.hash, function(err, reply) {
             if (!reply) {
+              db_friends.del(user.hash);
               resque.enqueue('fb', 'generate_friends', [user.hash]);
               db_friends.set("generating:" + user.hash, true);
             }
