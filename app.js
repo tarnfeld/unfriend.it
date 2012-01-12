@@ -195,6 +195,11 @@ app.get('/friends', auth_require, function(req, res) {
               user: req.user
             });
           }
+        } else {
+          res.render('friends', {
+            friends: [],
+            user: req.user
+          });
         }
       })
     } else {
