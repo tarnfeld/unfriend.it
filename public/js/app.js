@@ -20,4 +20,18 @@ $(function() {
 			$(this).addClass("checked");
 		}
 	});
+
+	$(".lists a").live('click', function(e) {
+		e.preventDefault();
+		if ($(this).data("members") == "*") {
+			$(".friends .friend").show();
+		} else {
+			var ids = $(this).data("members").split(","),
+				selector = ".friend[data-fbid='" + ids.join("'],.friend[data-fbid='") + "']",
+				$friends = $(selector);
+		
+			$(".friends .friend").hide();
+			$friends.show();
+		}
+	});
 });

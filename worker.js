@@ -28,7 +28,7 @@ var queue = resque.connect(conf.redis);
 
 // Jobs
 var jobs = {
-	generate_friends: function(user_hash, callback) {
+	generate: function(user_hash, callback) {
 
 		db_users.get(user_hash, function(err, reply) {
 			if (reply) {
@@ -49,11 +49,30 @@ var jobs = {
 					// Save the friends to redis
 					db_friends.set(user.hash, JSON.stringify(_.values(friends)));
 
-					// Enqueue the friends sort
-					queue.enqueue('fb', 'sort_friends', [user.hash]);
+					graph.get('me/friendlists', function(err, res) {
+						if (res.data) {
+							var lists = res.data,
+								x = 0;
+							_.each(lists, function(list) {
+								graph.get(list.id + '/members', function(err, res) {
+									x++;
+									if (res.data) {
+										list.members = res.data;
+										if (x == lists.length) {
+											// Save the lists
+											db_friends.set(user.hash + '_lists', JSON.stringify(_.values(lists)))
 
-					// Finish up
-					callback();
+											// Enqueue the sort
+											queue.enqueue('fb', 'sort', [user.hash]);
+
+											// Finish up
+											callback();
+										}
+									}
+								});
+							});
+						}
+					});
 				});
 			} else {
 				// Throw an error
@@ -62,8 +81,8 @@ var jobs = {
 			}
 		});
 	},
-	sort_friends: function(user_hash, callback) {
-		var friends;
+	sort: function(user_hash, callback) {
+		var friends, lists;
 
 		db_friends.get(user_hash, function(err, reply) {
 			if (reply) {
@@ -77,18 +96,36 @@ var jobs = {
 
 				db_friends.set(user_hash, JSON.stringify(_.values(friends)));
 
-				// Delete the generating flag
-				db_friends.del("generating:" + user_hash);
-				
-				// Send the notification into redis
-				var event = {
-					channel: "generated_friends",
-					identifier: user_hash,
-					payload: "updated_friends"
-				};
-				db_notifications.publish("notifications:socketio", JSON.stringify(event));
+				db_friends.get(user_hash + '_lists', function(err, reply) {
+					if (reply) {
 
-				callback();	
+						lists = JSON.parse(reply);
+						lists.sort(function(l, r) {
+							if (l.name < r.name) return -1;
+							if (l.name > r.name) return 1;
+							return 0;
+						});
+
+						db_friends.set(user_hash + '_lists', JSON.stringify(_.values(lists)));
+
+						// Delete the generating flag
+						db_friends.del("generating:" + user_hash);
+						
+						// Send the notification into redis
+						var event = {
+							channel: "generated_friends",
+							identifier: user_hash,
+							payload: "updated_friends"
+						};
+						db_notifications.publish("notifications:socketio", JSON.stringify(event));
+
+						// Finish up here
+						callback();	
+					} else {
+						console.log("Couldn't load friend lists from key " + user_hash + "_lists");
+						callback();
+					}
+				});
 			} else {
 				console.log("Couldn't load friends from key: " + key);
 				callback();

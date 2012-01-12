@@ -1,15 +1,38 @@
-<% if (friends.length > 0) { %>
-<div class="friends cf">
-	<% for (var i = 0; i < friends.length; i++) { %>
-		<div class="friend" data-fbid="<%=friends[i].id%>">
-			<img src="https://graph.facebook.com/<%=friends[i].id%>/picture" width="48" height="48" />
-			<p><strong><%=friends[i].name%></strong></p>
-			<span class="check"></span>
-		</div>
+<div class="subcol">
+	<h1><a href="/">unfriend.it</a></h1>
+	<p>Logged in as <a href="<%=user.link%>" target="_blank"><%=user.name%></a>. <a href="/auth/logout">Log out</a></p>
+
+	<% if (typeof lists != "undefined" && lists.length > 0) { %>
+		<ul class="lists">
+			<li><a href="#" class="list_all" data-members="*">All friends</a></li>
+			<% for (var x = 0; x < lists.length; x++) { var list = lists[x]; %>
+				<li>
+					<%
+						var members = [];
+						_.each(list.members, function(member) {
+							members.push(member.id);
+						});
+					%>
+					<a href="#" class="list_<%=list.list_type%>" data-members="<%=members.join(",")%>"><%=list.name%></a>
+				</li>
+			<% } %>
+		</li>
 	<% } %>
 </div>
-<% } else { %>
-<div class="loading">
-	<p><strong>Loading your friends now...</strong></p>
+<div class="maincol">
+	<% if (friends.length > 0) { %>
+	<div class="friends cf">
+		<% for (var i = 0; i < friends.length; i++) { %>
+			<div class="friend" data-fbid="<%=friends[i].id%>">
+				<img src="https://graph.facebook.com/<%=friends[i].id%>/picture" width="48" height="48" />
+				<p><strong><%=friends[i].name%></strong></p>
+				<span class="check"></span>
+			</div>
+		<% } %>
+	</div>
+	<% } else { %>
+	<div class="loading">
+		<p><strong>Loading your friends now...</strong></p>
+	</div>
+	<% } %>
 </div>
-<% } %>

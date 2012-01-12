@@ -132,6 +132,7 @@ app.get('/auth/facebook', function(req, res) {
     , "redirect_uri":   conf.fb.redirect_uri
     , "client_secret":  conf.fb.client_secret
     , "code":           req.query.code
+    , "scope":          conf.fb.scope
   }, function (err, facebookRes) {
     if (facebookRes.access_token) {
       var hashed_token = crypto.createHash('md5').update(facebookRes.access_token).digest("hex");
@@ -152,7 +153,7 @@ app.get('/auth/facebook', function(req, res) {
           db_friends.get("generating:" + user.hash, function(err, reply) {
             if (!reply) {
               db_friends.del(user.hash);
-              resque.enqueue('fb', 'generate_friends', [user.hash]);
+              resque.enqueue('fb', 'generate', [user.hash]);
               db_friends.set("generating:" + user.hash, true);
             }
           });
@@ -175,19 +176,27 @@ app.get('/auth/logout', function(req, res) {
 
 app.get('/friends', auth_require, function(req, res) {
   db_friends.get(req.user.hash, function(err, reply) {
+    // resque.enqueue('fb', 'generate', [req.user.hash]);
     if (reply) {
-      var friends = JSON.parse(reply);
-      if (friends) {
-        res.render('friends', {
-          friends: friends,
-          user: req.user
-        });
-      } else {
-        res.render('friends', {
-          friends: [],
-          user: req.user
-        });
-      }
+      db_friends.get(req.user.hash + '_lists', function(err, data) {
+        if (data) {
+          var friends = JSON.parse(reply),
+              lists = JSON.parse(data);
+              
+          if (friends) {
+            res.render('friends', {
+              friends: friends,
+              user: req.user,
+              lists: lists
+            });
+          } else {
+            res.render('friends', {
+              friends: [],
+              user: req.user
+            });
+          }
+        }
+      })
     } else {
       res.render('friends', {
         friends: [],
