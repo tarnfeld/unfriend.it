@@ -56,6 +56,8 @@ var jobs = {
 							_.each(lists, function(list) {
 								graph.get(list.id + '/members', function(err, res) {
 									x++;
+									console.log(x, lists.length);
+									console.log(res);
 									if (res.data) {
 										list.members = res.data;
 										if (x == lists.length) {
