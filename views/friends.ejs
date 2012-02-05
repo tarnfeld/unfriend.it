@@ -1,6 +1,6 @@
 <div class="subcol">
 	<h1><a href="/">unfriend.it</a></h1>
-	<p>You're <a href="<%=user.link%>" target="_blank"><%=user.name%></a>. <a href="/auth/logout" class="logout">Log out?</a></p>
+	<p>Logged in as <a href="<%=user.link%>" target="_blank"><%=user.name%></a>. <a href="/auth/logout">Log out</a></p>
 
 	<% if (typeof lists != "undefined" && lists.length > 0) { %>
 		<ul class="lists">
@@ -32,7 +32,7 @@
 	</div>
 	<% } else { %>
 	<div class="loading">
-		<p><strong>Loading friends...</strong></p>
+		<p><strong>Loading your friends now...</strong></p>
 	</div>
 	<% } %>
 </div>
