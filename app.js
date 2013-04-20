@@ -49,7 +49,7 @@ app.configure(function(){
     client: db_session
   });
   app.use(express.session({ store: session, secret: 'keyboard cat' }));
-  
+
   app.helpers({
     _: require('underscore')
   });
@@ -57,7 +57,7 @@ app.configure(function(){
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
-  
+
   app.use(express.static(__dirname + '/public'));
 });
 
@@ -69,7 +69,7 @@ app.configure('development', function(){
 });
 
 app.configure('production', function(){
-  app.use(express.errorHandler()); 
+  app.use(express.errorHandler());
 });
 
 // Middleware
@@ -115,7 +115,7 @@ app.get('/', auth_check, function(req, res) {
 app.get('/auth/facebook', function(req, res) {
   req.session.user = false;
   if (!req.query.code) {
-    
+
     var authUrl = graph.getOauthUrl(conf.fb);
     if (!req.query.error) {
       res.redirect(authUrl);
@@ -182,7 +182,7 @@ app.get('/friends', auth_require, function(req, res) {
         if (data) {
           var friends = JSON.parse(reply),
               lists = JSON.parse(data);
-              
+
           if (friends) {
             res.render('friends', {
               friends: friends,
