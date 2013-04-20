@@ -1,0 +1,32 @@
+
+exports.redis = {
+	host: "TEST_REDIS_HOST"
+	port: "TEST_REDIS_PORT"
+};
+
+exports.fb = {
+  client_id: 'TEST_CLIENT_ID',
+  client_secret: 'TEST_CLIENT_SECRET',
+  scope: 'email,read_friendlists,offline_access',
+  redirect_uri: 'TEST_REDIRECT_URI'
+};
+
+if (process.env.NODE_ENV == "production") {
+
+  // Read in environment options from the dotcloud environment file
+	var fs = require('fs');
+	var env = JSON.parse(fs.readFileSync('/home/dotcloud/environment.json', 'utf-8'));
+
+	exports.redis = {
+		host: env['DOTCLOUD_DB_REDIS_HOST'],
+		port: env['DOTCLOUD_DB_REDIS_PORT'],
+		password: env['DOTCLOUD_DB_REDIS_PASSWORD']
+	};
+
+	exports.fb = {
+	  client_id: 'PROD_CLIENT_ID',
+	  client_secret: 'PROD_CLIENT_SECRET',
+	  scope: 'email',
+	  redirect_uri: 'PROD_REDIRECT_URI'
+	};
+}
